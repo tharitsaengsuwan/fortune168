@@ -1,0 +1,30 @@
+<% layout('layouts/boilerplate') %>
+    <h1 class="mt-4 mb-3 text-center">All Fortune Tellers</h1>
+    <% for( let i = 0; i < results[0].length; i++ ) { %>
+        <div class="row">
+            <div class="card mb-3 index-card col-md-8 offset-md-2">
+                <div class="row">
+                    <div class="">
+                        <div class="card-body">
+                            <h2 class="card-title">
+                                <%= results[0][i].UserName %>
+                            </h2>
+                            <p class="card-text">
+                                <%= results[0][i].FirstName %>
+                                    <%= results[0][i].LastName %> Tel.
+                                        <%= results[0][i].PhoneNo %>
+                            </p>
+                            <p class="card-text">
+                                <%= results[0][i].WorkExp%>
+                            </p>
+                            <p class="card-text">
+                                <small class="text-muted"> Address: <%= results[0][i].Address %> </small>
+                            </p>
+                            <a href="/fortuneTellers/<%= results[0][i].Userid %>" class="btn btn-primary">View</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <% } %>

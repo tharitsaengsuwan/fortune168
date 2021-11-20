@@ -1,0 +1,70 @@
+h1, h2 {
+    color: rgba(249, 105, 14, 1);
+}
+
+h1 {
+    font-family: 'Fredoka One', sans-serif;
+}
+
+.navbar {
+    background-color: white;
+    box-shadow: 0 0px 12px 0 rgba(0, 0, 0, 0.15);
+}
+
+.nav-link {
+    color: rgba(245, 171, 53, 1);
+    font-weight: 500;
+}
+
+.nav-link:focus{
+    color: rgba(245, 171, 53, 1);
+}
+
+.nav-link:hover {
+    color: rgba(249, 105, 14, 1);
+	border-bottom-color: rgba(249, 105, 14, 1);
+}
+
+/* Set the border color for navbar toggler button (the below code)*/
+          
+.custom-toggler.navbar-toggler {
+    border-color: rgba(249, 105, 14, 1);
+}
+
+.custom-toggler .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(249, 105, 14, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+}
+
+/* Set the border color for navbar toggler button (the above code)*/
+
+.footer {
+    background-color: rgb(230, 230, 230, 0.7);
+}
+
+.index-card:hover {
+    box-shadow: 0 0px 12px 0 rgba(0, 0, 0, 0.2);
+}
+
+.carousel .carousel-item {
+    height: 400px;
+  }
+  
+.carousel-item img {
+    position: absolute;
+    object-fit:cover;
+    top: 0;
+    left: 0;
+    min-height: 400px;
+}
+
+.logo {
+    background: linear-gradient(to right, red, orange);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+    text-shadow: none;
+    font-size: 1.5em;
+    font-family: 'Fredoka One', sans-serif;
+}
+
+
+
