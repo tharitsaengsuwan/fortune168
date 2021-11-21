@@ -1,0 +1,25 @@
+<% layout('layouts/boilerplate') %>
+    <h1 class="text-center">Edit an Extra Information</h1>
+    <div class="col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+        <form action="/extrainfo/<%= id %>/<%= extrainfo._id.toString() %>?_method=PUT" method="POST" class="validated-form" novalidate>
+            <div class="mb-3">
+                <h3>Name:
+                    <%= extrainfo.informationType.name %>
+                </h3>
+                <p>Description:
+                    <%= extrainfo.informationType.description %>
+                </p>
+            </div>
+            <div class="mb-3">
+                <label for="value" class="form-label">Value</label>
+                <textarea name="value" id="value" class="form-control" required><%= extrainfo.value %></textarea>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="my-5">
+                <button class="btn btn-success">Submit</button>
+                <a href="/users/<%= id %>" class="btn btn-outline-danger mx-2">Cancel</a>
+            </div>
+        </form>
+    </div>

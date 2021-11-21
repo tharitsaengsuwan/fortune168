@@ -110,7 +110,12 @@ module.exports.renderEditForm = async(req, res) => {
 
 module.exports.showUser = async(req, res) => {
     const id = req.params.id;
-    const user = await User.findById(id).populate('informationTypes');
+    const user = await User.findById(id).populate('informationTypes').populate({
+        path: 'informations',
+        populate: {
+            path: 'informationType'
+        }
+    });
     if (user.role == 'customer') {
         app.pool.query("call query_customer(?)", [id], function(error, results, fields) {
             if (error) {
@@ -123,7 +128,8 @@ module.exports.showUser = async(req, res) => {
                     break;
                 }
             }
-            res.render('users/customerShow', { thisUser })
+            console.log(user);
+            res.render('users/customerShow', { thisUser, user })
         });
     } else {
         app.pool.query("call query_provider(?)", [id], function(error, results, fields) {
@@ -187,7 +193,7 @@ module.exports.showSchedules = async(req, res) => {
     const id = req.params.id;
     const user = await User.findById(id)
     if (user.role == 'customer') {
-        app.pool.query("call query_appointment_customer(?)", [id], function(error, results, fields) {
+        app.pool.query("call query_appointment_customer(?)", [id], async function(error, results, fields) {
             if (error) return next(error);
 
             res.render('schedules/customerIndex', { results });
@@ -195,7 +201,7 @@ module.exports.showSchedules = async(req, res) => {
     } else {
         app.pool.query("call query_appointment_provider(?)", [id], function(error, results, fields) {
             if (error) return next(error);
-            console.log(results)
+
             res.render('schedules/providerIndex', { results });
         });
     }

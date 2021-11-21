@@ -1,5 +1,6 @@
 const InformationType = require('../models/extraInfoType');
 const User = require('../models/user');
+const Information = require('../models/extraInfo')
 
 module.exports.renderNewForm = async(req, res) => {
     const id = req.params.id;
@@ -38,6 +39,8 @@ module.exports.editType = async(req, res) => {
 
 module.exports.deleteType = async(req, res) => {
     const { id, typeid } = req.params;
+    const thisType = await InformationType.findById(typeid);
+    await Information.deleteMany({ _id: { $in: thisType.informations } })
     await User.findByIdAndUpdate(id, { $pull: { informationTypes: typeid } })
     await InformationType.findByIdAndDelete(typeid)
 

@@ -48,7 +48,7 @@
                         <% for(let i = 0; i < ft.informationTypes.length; i++) { %>
                             <div class="mb-3">
                                 <label class="form-label" for="extrainfo<%= i %>"><%= ft.informationTypes[i].name %>: <br> <%= ft.informationTypes[i].description %></label>
-                                <textarea class="form-control" id="extrainfo<%= i %>" name="extrainfo<%= i %>"></textarea>
+                                <textarea class="form-control" id="extrainfo<%= i %>" name="extrainfo[<%= i %>]"></textarea>
                             </div>
                             <% } %>
                                 <div class="mb-3 ">

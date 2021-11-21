@@ -22,8 +22,10 @@ const userRoutes = require('./routes/users');
 const fortuneTellersRoutes = require('./routes/fortuneTellers');
 const schedulesRoutes = require('./routes/schedules')
 const extrainfotypesRoutes = require('./routes/extraInfoTypes');
+const extrainfoRoutes = require('./routes/extrainfo');
 
 const dbUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/fortune168';
+
 mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     //useCreateIndex: true,
@@ -36,14 +38,6 @@ db.once("open", () => {
     console.log("Mongo database connected!");
 })
 
-//for LOCAL
-// const pool = mysql.createPool({
-//     host: 'localhost',
-//     user: 'root',
-//     database: 'demoexpress'
-// });
-
-//for CLOUD
 const pool = mysql.createPool({
     host: process.env.SQL_HOST,
     user: process.env.SQL_USER,
@@ -70,7 +64,7 @@ store.on('error', function(e) {
     console.log("SESSION STORE ERROR ", e)
 })
 
-app.set('trust proxy', 1) // trust first proxy
+app.set('trust proxy', 1)
 const sessionConfig = {
     store,
     name: 'session',
@@ -104,20 +98,6 @@ app.use((req, res, next) => {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-// app.get('/fortuneTellers', (req, res, next) => {
-//     // connection.query("select * from ads;", function (error, results) {
-//     //     if (error) {
-//     //        next(error); 
-//     //     } else {
-//     //         res.render('fortuneTellers/index', {results});
-//     //     }
-//     // });
-//     pool.query("select * from ads", function(error, results, fields) {
-//         if (error) return next(error);
-//         res.render('fortuneTellers/index', { results });
-//     });
-// })
-
 module.exports.pool = pool;
 
 app.use('/fortuneTellers', fortuneTellersRoutes);
@@ -127,6 +107,8 @@ app.use('/', userRoutes);
 app.use('/schedules', schedulesRoutes);
 
 app.use('/extrainfotypes', extrainfotypesRoutes);
+
+app.use('/extrainfo', extrainfoRoutes);
 
 app.get('/', (req, res) => {
     res.render('home');

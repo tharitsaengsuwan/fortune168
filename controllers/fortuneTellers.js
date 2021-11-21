@@ -1,5 +1,7 @@
 const app = require('../app.js');
 const User = require('../models/user')
+const Information = require('../models/extraInfo')
+const InformationType = require('../models/extraInfoType')
 
 module.exports.index = async(req, res, next) => {
     app.pool.query("call query_all_provider()", function(error, results, fields) {
@@ -11,7 +13,25 @@ module.exports.index = async(req, res, next) => {
 module.exports.makeAppointment = async(req, res, next) => {
     const customerId = req.user._id.toString();
     const providerId = req.params.id;
-    const { Date, Duration } = req.body;
+    const { Date, Duration, extrainfo } = req.body;
+    const ft = await User.findById(providerId).populate('informationTypes');
+
+    for (let i = 0; i < extrainfo.length; i++) {
+        if (extrainfo[i]) {
+            const newxtrainfo = new Information({ value: extrainfo[i] });
+            newxtrainfo.owner = customerId;
+            newxtrainfo.informationType = ft.informationTypes[i]._id;
+            await newxtrainfo.save();
+
+            const infotype = await InformationType.findById(ft.informationTypes[i]._id);
+            infotype.informations.push(newxtrainfo._id);
+            await infotype.save();
+
+            const cus = await User.findById(customerId);
+            cus.informations.push(newxtrainfo._id);
+            await cus.save();
+        }
+    }
     const sqlText = "call make_appointment(?, ?, ?, ?, ?, ?, ?, @output)"
     const sqlParams = [customerId, providerId, 0, Date, Duration, 5, ""];
     app.pool.query(sqlText, sqlParams, function(error, results, fields) {
