@@ -120,18 +120,6 @@ app.use((req, res, next) => {
 
 module.exports.pool = pool;
 
-app.get('/yoyo', (req, res) => {
-    res.render('users/providerEdit');
-})
-
-app.get('/test', (req, res) => {
-    res.render('users/providerShow');
-})
-
-app.get('/ftshow', (req, res) => {
-    res.render('fortuneTellers/show');
-})
-
 app.use('/fortuneTellers', fortuneTellersRoutes);
 
 app.use('/', userRoutes);
