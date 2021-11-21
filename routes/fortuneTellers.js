@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const catchAsync = require('../utils/catchAsync');
-const { isLoggedIn, isOwner } = require('../middleware');
+const { isLoggedIn, isOwner, isCustomer, isProvider } = require('../middleware');
 const fortuneTellers = require('../controllers/fortuneTellers');
 
 router.route('/')
@@ -9,6 +9,6 @@ router.route('/')
 
 router.route('/:id')
     .get(catchAsync(fortuneTellers.showFortuneTeller))
-    .post(isLoggedIn, catchAsync(fortuneTellers.makeAppointment))
+    .post(isLoggedIn, isCustomer, catchAsync(fortuneTellers.makeAppointment))
 
 module.exports = router

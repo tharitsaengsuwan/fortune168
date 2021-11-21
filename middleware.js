@@ -16,7 +16,25 @@ module.exports.isOwner = async(req, res, next) => {
     const { id } = req.params;
     if (id != req.user._id.toString()) {
         req.flash('error', 'You do not have permission to do that!');
-        return res.redirect('/fortuneTellers')
+        return res.redirect('/fortuneTellers');
+    }
+    next();
+}
+
+module.exports.isCustomer = async(req, res, next) => {
+    const role = req.user.role;
+    if (role != 'customer') {
+        req.flash('error', 'You are not a customer!');
+        return res.redirect('/fortuneTellers');
+    }
+    next();
+}
+
+module.exports.isProvider = async(req, res, next) => {
+    const role = req.user.role;
+    if (role != 'fortuneTeller') {
+        req.flash('error', 'You are not a provider!');
+        return res.redirect('/fortuneTellers');
     }
     next();
 }

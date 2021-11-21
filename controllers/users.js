@@ -82,7 +82,13 @@ module.exports.renderEditForm = async(req, res) => {
             if (error) {
                 return next(error);
             }
-            const thisUser = results[0][0]
+            let thisUser
+            for (let i = 0; i < results[0].length; i++) {
+                if (results[0][i].Userid == id) {
+                    thisUser = results[0][i];
+                    break;
+                }
+            }
             res.render('users/customerEdit', { thisUser })
         });
     } else {
@@ -90,7 +96,13 @@ module.exports.renderEditForm = async(req, res) => {
             if (error) {
                 return next(error);
             }
-            const thisUser = results[0][0]
+            let thisUser
+            for (let i = 0; i < results[0].length; i++) {
+                if (results[0][i].Userid == id) {
+                    thisUser = results[0][i];
+                    break;
+                }
+            }
             res.render('users/providerEdit', { thisUser })
         });
     }
@@ -98,13 +110,19 @@ module.exports.renderEditForm = async(req, res) => {
 
 module.exports.showUser = async(req, res) => {
     const id = req.params.id;
-    const user = await User.findById(id);
+    const user = await User.findById(id).populate('informationTypes');
     if (user.role == 'customer') {
         app.pool.query("call query_customer(?)", [id], function(error, results, fields) {
             if (error) {
                 return next(error);
             }
-            const thisUser = results[0][0]
+            let thisUser
+            for (let i = 0; i < results[0].length; i++) {
+                if (results[0][i].Userid == id) {
+                    thisUser = results[0][i];
+                    break;
+                }
+            }
             res.render('users/customerShow', { thisUser })
         });
     } else {
@@ -112,8 +130,14 @@ module.exports.showUser = async(req, res) => {
             if (error) {
                 return next(error);
             }
-            const thisUser = results[0][0]
-            res.render('users/providerShow', { thisUser })
+            let thisUser
+            for (let i = 0; i < results[0].length; i++) {
+                if (results[0][i].Userid == id) {
+                    thisUser = results[0][i];
+                    break;
+                }
+            }
+            res.render('users/providerShow', { thisUser, user })
         });
     }
 }
@@ -122,17 +146,57 @@ module.exports.updateUser = async(req, res, next) => {
     const id = req.params.id;
     const user = await User.findById(id);
     if (user.role == 'customer') {
-        const { FirstName, LastName, PhoneNo, BirthDate, Address, CarRegNum, BloodGroup } = req.body;
-        const sqlText = "call update_customer(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, @output)";
-        const sqlParams = [id, CarRegNum, BloodGroup, PhoneNo, FirstName, LastName, BirthDate, Address, user.username, user.hash];
-        app.pool.query(sqlText, sqlParams, function(error, results, fields) {
+        app.pool.query("call query_customer(?)", [id], function(error, results, fields) {
             if (error) {
                 return next(error);
             }
-            req.flash('success', 'profile updated!');
-            res.redirect(`/users/${id}`);
+            const thisUser = results[0][0]
+            const { FirstName, LastName, PhoneNo, BirthDate, Address, CarRegNum, BloodGroup } = req.body;
+            const sqlText = "call update_customer(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, @output)";
+            const sqlParams = [id, CarRegNum, BloodGroup, PhoneNo, FirstName, LastName, BirthDate, Address, thisUser.UserName, thisUser.Password];
+            app.pool.query(sqlText, sqlParams, function(error, results, fields) {
+                if (error) {
+                    return next(error);
+                }
+                req.flash('success', 'profile updated!');
+                res.redirect(`/users/${id}`);
+            });
         });
     } else {
+        app.pool.query("call query_provider(?)", [id], function(error, results, fields) {
+            if (error) {
+                return next(error);
+            }
+            const thisUser = results[0][0]
+            const { FirstName, LastName, PhoneNo, BirthDate, Address, WorkExp } = req.body;
+            const sqlText = "call update_provider(?, ?, ?, ?, ?, ?, ?, ?, ?, @output)";
+            const sqlParams = [id, WorkExp, PhoneNo, FirstName, LastName, BirthDate, Address, thisUser.UserName, thisUser.Password];
+            console.log('hello from update');
+            app.pool.query(sqlText, sqlParams, function(error, results, fields) {
+                if (error) {
+                    return next(error);
+                }
+                req.flash('success', 'profile updated!');
+                res.redirect(`/users/${id}`);
+            });
+        });
+    }
+}
 
+module.exports.showSchedules = async(req, res) => {
+    const id = req.params.id;
+    const user = await User.findById(id)
+    if (user.role == 'customer') {
+        app.pool.query("call query_appointment_customer(?)", [id], function(error, results, fields) {
+            if (error) return next(error);
+
+            res.render('schedules/customerIndex', { results });
+        });
+    } else {
+        app.pool.query("call query_appointment_provider(?)", [id], function(error, results, fields) {
+            if (error) return next(error);
+            console.log(results)
+            res.render('schedules/providerIndex', { results });
+        });
     }
 }

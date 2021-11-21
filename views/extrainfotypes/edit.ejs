@@ -1,0 +1,24 @@
+<% layout('layouts/boilerplate') %>
+    <h1 class="text-center">Edit an Extra Information</h1>
+    <div class="col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+        <form action="/extrainfotypes/<%= id %>/<%= infotype._id.toString() %>?_method=PUT" method="POST" class="validated-form" novalidate>
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" name="name" id="name" class="form-control" autofocus required value="<%= infotype.name %>">
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea name="description" id="description" class="form-control" required><%= infotype.description %></textarea>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="my-5">
+                <button class="btn btn-success">Submit</button>
+                <a href="/users/<%= id %>" class="btn btn-outline-danger mx-2">Cancel</a>
+            </div>
+        </form>
+    </div>

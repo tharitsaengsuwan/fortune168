@@ -18,15 +18,15 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label for="PhoneNo" class="form-label">Phone Number</label>
-                    <input type="text" name="PhoneNo" id="PhoneNo" class="form-control" required value="<%= thisUser.PhoneNo %>">
+                    <label for="PhoneNo" class="form-label">Phone Number (Format: 0987654321)</label>
+                    <input type="tel" name="PhoneNo" id="PhoneNo" class="form-control" placeholder="format: 0987654321" pattern="[0-9]{10}" required value="<%= thisUser.PhoneNo %>">
                     <div class="valid-feedback">
                         Looks good!
                     </div>
                 </div>
                 <div class="mb-3">
                     <label for="BirthDate" class="form-label">Birth Date</label>
-                    <input type="date" name="BirthDate" id="BirthDate" class="form-control" required value="<%= thisUser.BirthDate.substring %>">
+                    <input type="date" name="BirthDate" id="BirthDate" class="form-control" required value="<%= thisUser.BirthDate %>">
                     <div class="valid-feedback">
                         Looks good!
                     </div>

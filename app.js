@@ -20,6 +20,8 @@ const catchAsync = require('./utils/catchAsync');
 const User = require('./models/user');
 const userRoutes = require('./routes/users');
 const fortuneTellersRoutes = require('./routes/fortuneTellers');
+const schedulesRoutes = require('./routes/schedules')
+const extrainfotypesRoutes = require('./routes/extraInfoTypes');
 
 const dbUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/fortune168';
 mongoose.connect(dbUrl, {
@@ -133,6 +135,10 @@ app.get('/ftshow', (req, res) => {
 app.use('/fortuneTellers', fortuneTellersRoutes);
 
 app.use('/', userRoutes);
+
+app.use('/schedules', schedulesRoutes);
+
+app.use('/extrainfotypes', extrainfotypesRoutes);
 
 app.get('/', (req, res) => {
     res.render('home');

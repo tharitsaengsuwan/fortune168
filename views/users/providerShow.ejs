@@ -26,7 +26,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="BirthDate" class="form-label">Birth Date</label>
-                    <input type="date" name="BirthDate" id="BirthDate" class="form-control" required readonly value="<%= thisUser.BirthDate.substring %>">
+                    <input type="date" name="BirthDate" id="BirthDate" class="form-control" required readonly value="<%= thisUser.BirthDate %>">
                     <div class="valid-feedback">
                         Looks good!
                     </div>
@@ -78,5 +78,37 @@
                 </div>
 
             </form>
+        </div>
+    </div>
+    <div class="row">
+        <h1 class="text-center">Ask For Extra Information</h1>
+        <div class="col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+            <% for( let i=0; i < user.informationTypes.length; i++ ) { %>
+                <div class="row">
+                    <div class="card mb-3 index-card col-md-8 offset-md-2">
+                        <div class="row">
+                            <div class="">
+                                <div class="card-body">
+                                    <h2 class="card-title">
+                                        Name:
+                                        <%= user.informationTypes[i].name %>
+                                    </h2>
+                                    <p class="card-text">
+                                        Description:
+                                        <%= user.informationTypes[i].description %>
+                                    </p>
+                                    <a href="/extrainfotypes/<%= thisUser.Userid %>/<%= user.informationTypes[i]._id.toString() %>/edit" class="btn btn-primary">Edit</a>
+                                    <form action="/extrainfotypes/<%= thisUser.Userid %>/<%= user.informationTypes[i]._id.toString() %>?_method=DELETE" method="POST" class="d-inline">
+                                        <button class="btn btn-danger">Delete</a>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+                    <div class="mb-3 text-center">
+                        <a href="/extrainfotypes/<%= thisUser.Userid %>/new" class="btn btn-outline-primary mb-3">Add a new extra information</a>
+                    </div>
         </div>
     </div>

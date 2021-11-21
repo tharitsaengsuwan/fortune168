@@ -5,24 +5,24 @@
             <div class="card mb-3 shadow">
                 <div class="card-body">
                     <h5 class="card-title">
-                        <%= results[0][0].UserName %>
+                        <%= thisUser.UserName %>
                     </h5>
                     <p class="card-text">
-                        <%= results[0][0].FirstName %>
-                            <%= results[0][0].LastName %>
+                        <%= thisUser.FirstName %>
+                            <%= thisUser.LastName %>
                     </p>
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
-                        <%= results[0][0].WorkExp %>
+                        <%= thisUser.WorkExp %>
                     </li>
                     <li class="list-group-item text-muted">
                         Tel:
-                        <%= results[0][0].PhoneNo %>
+                        <%= thisUser.PhoneNo %>
                     </li>
                     <li class="list-group-item text-muted">
                         Address:
-                        <%= results[0][0].Address %>
+                        <%= thisUser.Address %>
                     </li>
                 </ul>
             </div>
@@ -33,7 +33,7 @@
     <div class="row">
         <div class="col-md-8 offset-md-2">
             <h2 class="mt-3">Make an Appointment</h2>
-            <form action="/fortuneTellers/<%= results[0][0].Userid %>" method="POST" novalidate class="validated-form">
+            <form action="/fortuneTellers/<%= thisUser.Userid %>" method="POST" novalidate class="validated-form">
                 <div class="mb-3">
                     <label class="form-label" for="Date">Enter a date and time for your booking</label>
                     <input class="form-control" id="Date" type="datetime-local" name="Date" required>
@@ -42,9 +42,18 @@
                     <label class="form-label" for="Duration">Duration (half an hour)</label>
                     <input class="form-control" id="Duration" type="number" name="Duration" min="1" max="48" required>
                 </div>
-                <div class="mb-3 ">
-                    <button class="btn btn-success ">Make an Appointment</button>
-                </div>
+                <% if (ft.informationTypes.length != 0 ) { %>
+                    <h2>Extra Information (not required)</h2>
+                    <% } %>
+                        <% for(let i = 0; i < ft.informationTypes.length; i++) { %>
+                            <div class="mb-3">
+                                <label class="form-label" for="extrainfo<%= i %>"><%= ft.informationTypes[i].name %>: <br> <%= ft.informationTypes[i].description %></label>
+                                <textarea class="form-control" id="extrainfo<%= i %>" name="extrainfo<%= i %>"></textarea>
+                            </div>
+                            <% } %>
+                                <div class="mb-3 ">
+                                    <button class="btn btn-success ">Make an Appointment</button>
+                                </div>
             </form>
         </div>
     </div>

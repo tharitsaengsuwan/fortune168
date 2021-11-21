@@ -1,0 +1,38 @@
+<% layout('layouts/boilerplate') %>
+    <h1 class="mt-4 mb-3 text-center">My Schedules</h1>
+    <% for( let i=0; i < results[0].length; i++ ) { %>
+        <div class="row">
+            <div class="card mb-3 index-card col-md-8 offset-md-2">
+                <div class="row">
+                    <div class="">
+                        <div class="card-body">
+                            <h2 class="card-title">
+                                Schedule ID:
+                                <%= results[0][i].ScheduleId %>
+                            </h2>
+                            <p class="card-text">
+                                Customer:
+                                <%= results[0][i].CustomerId %> <br> Provider:
+                                    <%= results[0][i].ProviderId %><br> Date:
+                                        <%= results[0][i].Date %><br> Duration:
+                                            <%= results[0][i].Duration%>
+                            </p>
+                            <p class="card-text">Status:
+                                <%= results[0][i].Status%> <br>
+                                    <%= results[0][i].Status==0? 'pending': ''%>
+                                        <%= results[0][i].Status==1? 'accept' : '' %>
+                                            <%= results[0][i].Status==2? 'reject' : '' %>
+                            </p>
+                            <form action="/schedules/<%= results[0][i].ScheduleId %>?_method=DELETE" method="POST">
+                                <input type="text" name="ScheduleId" value="<%= results[0][i].ScheduleId %>" class="d-none">
+                                <input type="text" name="CustomerId" value="<%= results[0][i].CustomerId %>" class="d-none">
+                                <input type="text" name="ProviderId" value="<%= results[0][i].ProviderId %>" class="d-none">
+                                <button class="btn btn-outline-danger">Delete Appointment</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <% } %>

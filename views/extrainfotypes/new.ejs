@@ -1,0 +1,23 @@
+<% layout('layouts/boilerplate') %>
+    <h1 class="text-center">Creat a new Extra Information</h1>
+    <div class="col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+        <form action="/extrainfotypes/<%= id %>/new" method="POST" class="validated-form" novalidate>
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" name="name" id="name" class="form-control" autofocus required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea name="description" id="description" class="form-control" required></textarea>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="d-grid my-5">
+                <button class="btn btn-outline-success">Submit</button>
+            </div>
+        </form>
+    </div>

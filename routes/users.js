@@ -22,4 +22,6 @@ router.route('/users/:id')
 
 router.get('/users/:id/edit', isLoggedIn, isOwner, catchAsync(users.renderEditForm));
 
+router.get('/users/schedules/:id', isLoggedIn, isOwner, catchAsync(users.showSchedules))
+
 module.exports = router

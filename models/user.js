@@ -26,7 +26,15 @@ const UserSchema = new Schema({
     role: {
         type: String,
         required: true
-    }
+    },
+    informationTypes: [{
+        type: Schema.Types.ObjectId,
+        ref: 'InformationType'
+    }],
+    informations: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Information'
+    }]
 })
 
 // this is going to add on username and password and some another method for us
