@@ -15,21 +15,22 @@ module.exports.makeAppointment = async(req, res, next) => {
     const providerId = req.params.id;
     const { Date, Duration, extrainfo } = req.body;
     const ft = await User.findById(providerId).populate('informationTypes');
+    if (extrainfo) {
+        for (let i = 0; i < extrainfo.length; i++) {
+            if (extrainfo[i]) {
+                const newxtrainfo = new Information({ value: extrainfo[i] });
+                newxtrainfo.owner = customerId;
+                newxtrainfo.informationType = ft.informationTypes[i]._id;
+                await newxtrainfo.save();
 
-    for (let i = 0; i < extrainfo.length; i++) {
-        if (extrainfo[i]) {
-            const newxtrainfo = new Information({ value: extrainfo[i] });
-            newxtrainfo.owner = customerId;
-            newxtrainfo.informationType = ft.informationTypes[i]._id;
-            await newxtrainfo.save();
+                const infotype = await InformationType.findById(ft.informationTypes[i]._id);
+                infotype.informations.push(newxtrainfo._id);
+                await infotype.save();
 
-            const infotype = await InformationType.findById(ft.informationTypes[i]._id);
-            infotype.informations.push(newxtrainfo._id);
-            await infotype.save();
-
-            const cus = await User.findById(customerId);
-            cus.informations.push(newxtrainfo._id);
-            await cus.save();
+                const cus = await User.findById(customerId);
+                cus.informations.push(newxtrainfo._id);
+                await cus.save();
+            }
         }
     }
     const sqlText = "call make_appointment(?, ?, ?, ?, ?, ?, ?, @output)"
