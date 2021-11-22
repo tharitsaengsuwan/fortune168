@@ -15,21 +15,35 @@ module.exports.makeAppointment = async(req, res, next) => {
     const providerId = req.params.id;
     const { Date, Duration, extrainfo } = req.body;
     const ft = await User.findById(providerId).populate('informationTypes');
+    ////////////////////////////////////NEW1////////////////////////////////////
+    const cus = await User.findById(customerId).populate('informations');
+    const existType = [];
+    for (let e of cus.informations) {
+        existType.push(e.informationType._id.toString());
+    }
+    ////////////////////////////////////NEW1////////////////////////////////////
     if (extrainfo) {
         for (let i = 0; i < extrainfo.length; i++) {
             if (extrainfo[i]) {
-                const newxtrainfo = new Information({ value: extrainfo[i] });
-                newxtrainfo.owner = customerId;
-                newxtrainfo.informationType = ft.informationTypes[i]._id;
-                await newxtrainfo.save();
+                ////////////////////////////////////NEW2////////////////////////////////////
+                if (existType.includes(ft.informationTypes[i]._id.toString())) {
+                    const filter = { owner: customerId, informationType: ft.informationTypes[i]._id };
+                    await Information.findOneAndUpdate(filter, { value: extrainfo[i] });
+                } else {
+                    ////////////////////////////////////NEW2////////////////////////////////////
+                    const newxtrainfo = new Information({ value: extrainfo[i] });
+                    newxtrainfo.owner = customerId;
+                    newxtrainfo.informationType = ft.informationTypes[i]._id;
+                    await newxtrainfo.save();
 
-                const infotype = await InformationType.findById(ft.informationTypes[i]._id);
-                infotype.informations.push(newxtrainfo._id);
-                await infotype.save();
+                    const infotype = await InformationType.findById(ft.informationTypes[i]._id);
+                    infotype.informations.push(newxtrainfo._id);
+                    await infotype.save();
 
-                const cus = await User.findById(customerId);
-                cus.informations.push(newxtrainfo._id);
-                await cus.save();
+                    const cus = await User.findById(customerId);
+                    cus.informations.push(newxtrainfo._id);
+                    await cus.save();
+                }
             }
         }
     }

@@ -89,7 +89,12 @@ module.exports.renderEditForm = async(req, res) => {
                     break;
                 }
             }
-            res.render('users/customerEdit', { thisUser })
+            ////////////////////NEW////////////////////
+            const d = new Date(thisUser.BirthDate);
+            d.setDate(d.getDate() + 1)
+            const birthday = d.toISOString().substring(0, 10);
+            ////////////////////NEW////////////////////
+            res.render('users/customerEdit', { thisUser, birthday })
         });
     } else {
         app.pool.query("call query_provider(?)", [id], function(error, results, fields) {
@@ -103,7 +108,12 @@ module.exports.renderEditForm = async(req, res) => {
                     break;
                 }
             }
-            res.render('users/providerEdit', { thisUser })
+            ////////////////////NEW////////////////////
+            const d = new Date(thisUser.BirthDate);
+            d.setDate(d.getDate() + 1)
+            const birthday = d.toISOString().substring(0, 10);
+            ////////////////////NEW////////////////////
+            res.render('users/providerEdit', { thisUser, birthday })
         });
     }
 }
@@ -128,8 +138,12 @@ module.exports.showUser = async(req, res) => {
                     break;
                 }
             }
-            console.log(user);
-            res.render('users/customerShow', { thisUser, user })
+            ////////////////////NEW////////////////////
+            const d = new Date(thisUser.BirthDate);
+            d.setDate(d.getDate() + 1)
+            const birthday = d.toISOString().substring(0, 10);
+            ////////////////////NEW////////////////////
+            res.render('users/customerShow', { thisUser, user, birthday })
         });
     } else {
         app.pool.query("call query_provider(?)", [id], function(error, results, fields) {
@@ -143,7 +157,12 @@ module.exports.showUser = async(req, res) => {
                     break;
                 }
             }
-            res.render('users/providerShow', { thisUser, user })
+            ////////////////////NEW////////////////////
+            const d = new Date(thisUser.BirthDate);
+            d.setDate(d.getDate() + 1)
+            const birthday = d.toISOString().substring(0, 10);
+            ////////////////////NEW////////////////////
+            res.render('users/providerShow', { thisUser, user, birthday })
         });
     }
 }
@@ -160,6 +179,7 @@ module.exports.updateUser = async(req, res, next) => {
             const { FirstName, LastName, PhoneNo, BirthDate, Address, CarRegNum, BloodGroup } = req.body;
             const sqlText = "call update_customer(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, @output)";
             const sqlParams = [id, CarRegNum, BloodGroup, PhoneNo, FirstName, LastName, BirthDate, Address, thisUser.UserName, thisUser.Password];
+
             app.pool.query(sqlText, sqlParams, function(error, results, fields) {
                 if (error) {
                     return next(error);
@@ -191,7 +211,9 @@ module.exports.updateUser = async(req, res, next) => {
 
 module.exports.showSchedules = async(req, res) => {
     const id = req.params.id;
-    const user = await User.findById(id)
+    ///////////////////////////POPULATION ADDED/////////////////
+    const user = await User.findById(id).populate('informationTypes');
+    ///////////////////////////POPULATION ADDED/////////////////
     if (user.role == 'customer') {
         app.pool.query("call query_appointment_customer(?)", [id], async function(error, results, fields) {
             if (error) return next(error);
@@ -199,10 +221,35 @@ module.exports.showSchedules = async(req, res) => {
             res.render('schedules/customerIndex', { results });
         });
     } else {
-        app.pool.query("call query_appointment_provider(?)", [id], function(error, results, fields) {
+        app.pool.query("call query_appointment_provider(?)", [id], async function(error, results, fields) {
             if (error) return next(error);
-
-            res.render('schedules/providerIndex', { results });
+            //////////////////////////////////////////////////////////
+            const requireType = []
+            for (let e of user.informationTypes) {
+                requireType.push(e._id.toString());
+            }
+            const ansInfo = [];
+            for (let e of results[0]) {
+                const cid = e.CustomerId;
+                const cus = await User.findById(cid).populate({
+                    path: 'informations',
+                    populate: {
+                        path: 'informationType'
+                    }
+                })
+                const thisCusInfo = []
+                for (let f of cus.informations) {
+                    if (requireType.includes(f.informationType._id.toString())) {
+                        thisCusInfo.push({
+                            value: f.value,
+                            name: f.informationType.name
+                        });
+                    }
+                }
+                ansInfo.push(thisCusInfo);
+            }
+            //////////////////////////////////////////////////////////
+            res.render('schedules/providerIndex', { results, ansInfo });
         });
     }
 }
