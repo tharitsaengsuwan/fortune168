@@ -91,7 +91,7 @@ module.exports.renderEditForm = async(req, res) => {
             }
             ////////////////////NEW////////////////////
             const d = new Date(thisUser.BirthDate);
-            d.setDate(d.getDate() + 1)
+            //d.setDate(d.getDate() + 1)
             const birthday = d.toISOString().substring(0, 10);
             ////////////////////NEW////////////////////
             res.render('users/customerEdit', { thisUser, birthday })
@@ -110,7 +110,7 @@ module.exports.renderEditForm = async(req, res) => {
             }
             ////////////////////NEW////////////////////
             const d = new Date(thisUser.BirthDate);
-            d.setDate(d.getDate() + 1)
+            //d.setDate(d.getDate() + 1)
             const birthday = d.toISOString().substring(0, 10);
             ////////////////////NEW////////////////////
             res.render('users/providerEdit', { thisUser, birthday })
@@ -140,7 +140,7 @@ module.exports.showUser = async(req, res) => {
             }
             ////////////////////NEW////////////////////
             const d = new Date(thisUser.BirthDate);
-            d.setDate(d.getDate() + 1)
+            //d.setDate(d.getDate() + 1)
             const birthday = d.toISOString().substring(0, 10);
             ////////////////////NEW////////////////////
             res.render('users/customerShow', { thisUser, user, birthday })
@@ -159,7 +159,7 @@ module.exports.showUser = async(req, res) => {
             }
             ////////////////////NEW////////////////////
             const d = new Date(thisUser.BirthDate);
-            d.setDate(d.getDate() + 1)
+            //d.setDate(d.getDate() + 1)
             const birthday = d.toISOString().substring(0, 10);
             ////////////////////NEW////////////////////
             res.render('users/providerShow', { thisUser, user, birthday })
